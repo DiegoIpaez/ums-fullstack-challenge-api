@@ -1,11 +1,15 @@
-using UmsApi.Data;
 using Microsoft.EntityFrameworkCore;
+using UmsApi.Data;
+using UmsApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
+
+builder.Services.AddScoped<IUserService, UserService>();
+
 
 builder.Services.AddDbContext<AppDbContext>(
     options => options.UseSqlServer(
