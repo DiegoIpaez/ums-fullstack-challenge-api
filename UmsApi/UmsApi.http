@@ -1,0 +1,6 @@
+@UmsApi_HostAddress = http://localhost:5098
+
+GET {{UmsApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
