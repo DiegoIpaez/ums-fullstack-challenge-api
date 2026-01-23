@@ -26,7 +26,8 @@ public class StudiesController : ControllerBase
     public async Task<ActionResult<StudyResponseDto>> GetById(long id)
     {
         var study = await _service.GetByIdAsync(id);
-        if (study == null) return NotFound();
+        if (study == null)
+            return NotFound();
         return Ok(study);
     }
 
@@ -41,14 +42,13 @@ public class StudiesController : ControllerBase
     public async Task<IActionResult> Update(long id, StudyUpdateDto dto)
     {
         await _service.UpdateAsync(id, dto);
-        return NoContent();               
+        return NoContent();
     }
-
 
     [HttpDelete("{id:long}")]
     public async Task<IActionResult> Delete(long id)
     {
-       await _service.DeleteAsync(id);
-       return NoContent();
+        await _service.DeleteAsync(id);
+        return NoContent();
     }
 }

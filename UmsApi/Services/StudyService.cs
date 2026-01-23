@@ -1,4 +1,3 @@
-using UmsApi.Services;
 using UmsApi.DTOs.Study;
 using UmsApi.Models;
 using UmsApi.Repositories;
@@ -17,21 +16,24 @@ public class StudyService : IStudyService
     public async Task<List<StudyResponseDto>> GetAllAsync()
     {
         var studies = await _repository.GetAllAsync();
-        return studies.Select(study => new StudyResponseDto
-        {
-            Id = study.Id,
-            Title = study.Title,
-            Institution = study.Institution,
-            StartDate = study.StartDate,
-            EndDate = study.EndDate,
-            UserId = study.UserId
-        }).ToList();
+        return studies
+            .Select(study => new StudyResponseDto
+            {
+                Id = study.Id,
+                Title = study.Title,
+                Institution = study.Institution,
+                StartDate = study.StartDate,
+                EndDate = study.EndDate,
+                UserId = study.UserId,
+            })
+            .ToList();
     }
 
     public async Task<StudyResponseDto?> GetByIdAsync(long id)
     {
         var study = await _repository.GetByIdAsync(id);
-        if (study == null) return null;
+        if (study == null)
+            return null;
 
         return new StudyResponseDto
         {
@@ -40,7 +42,7 @@ public class StudyService : IStudyService
             Institution = study.Institution,
             StartDate = study.StartDate,
             EndDate = study.EndDate,
-            UserId = study.UserId
+            UserId = study.UserId,
         };
     }
 
@@ -52,7 +54,7 @@ public class StudyService : IStudyService
             Institution = dto.Institution,
             StartDate = dto.StartDate,
             EndDate = dto.EndDate,
-            UserId = dto.UserId
+            UserId = dto.UserId,
         };
 
         study = await _repository.AddAsync(study);
@@ -64,14 +66,15 @@ public class StudyService : IStudyService
             Institution = study.Institution,
             StartDate = study.StartDate,
             EndDate = study.EndDate,
-            UserId = study.UserId
+            UserId = study.UserId,
         };
     }
 
     public async Task UpdateAsync(long id, StudyUpdateDto dto)
     {
         var study = await _repository.GetByIdAsync(id);
-        if (study == null) throw new KeyNotFoundException("Study not found");
+        if (study == null)
+            throw new KeyNotFoundException("Study not found");
 
         study.Title = dto.Title;
         study.Institution = dto.Institution;
@@ -84,7 +87,8 @@ public class StudyService : IStudyService
     public async Task DeleteAsync(long id)
     {
         var study = await _repository.GetByIdAsync(id);
-        if (study == null) throw new KeyNotFoundException("Study not found");
+        if (study == null)
+            throw new KeyNotFoundException("Study not found");
 
         await _repository.DeleteAsync(study);
     }

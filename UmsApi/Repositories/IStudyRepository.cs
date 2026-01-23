@@ -10,4 +10,3 @@ public interface IStudyRepository
     Task UpdateAsync(Study study);
     Task DeleteAsync(Study study);
 }
-

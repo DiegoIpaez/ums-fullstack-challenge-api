@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using UmsApi.Data;
 using UmsApi.Models;
-using UmsApi.Repositories;
 
 namespace UmsApi.Repositories;
 
@@ -14,15 +13,9 @@ public class StudyRepository : IStudyRepository
         _context = context;
     }
 
-    public async Task<List<Study>> GetAllAsync()
-    {
-        return await _context.Studies.ToListAsync();
-    }
+    public async Task<List<Study>> GetAllAsync() => await _context.Studies.ToListAsync();
 
-    public async Task<Study?> GetByIdAsync(long id)
-    {
-        return await _context.Studies.FindAsync(id);
-    }
+    public async Task<Study?> GetByIdAsync(long id) => await _context.Studies.FindAsync(id);
 
     public async Task<Study> AddAsync(Study study)
     {

@@ -1,5 +1,5 @@
-using UmsApi.Models;
 using Microsoft.EntityFrameworkCore;
+using UmsApi.Models;
 
 namespace UmsApi.Data;
 
@@ -14,9 +14,7 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<User>()
-            .HasIndex(user => user.Email)
-            .IsUnique();
+        modelBuilder.Entity<User>().HasIndex(user => user.Email).IsUnique();
 
         base.OnModelCreating(modelBuilder);
     }
