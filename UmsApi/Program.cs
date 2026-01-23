@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using UmsApi.Data;
 using UmsApi.Services;
+using UmsApi.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +10,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 
 builder.Services.AddScoped<IUserService, UserService>();
-
+builder.Services.AddScoped<IStudyService, StudyService>();
+builder.Services.AddScoped<IStudyRepository, StudyRepository>();
 
 builder.Services.AddDbContext<AppDbContext>(
     options => options.UseSqlServer(
