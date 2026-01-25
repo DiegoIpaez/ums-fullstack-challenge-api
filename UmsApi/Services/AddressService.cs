@@ -8,6 +8,7 @@ namespace UmsApi.Services;
 public class AddressService : IAddressService
 {
     private readonly IAddressRepository _repository;
+
     public AddressService(IAddressRepository repository)
     {
         _repository = repository;
@@ -34,7 +35,7 @@ public class AddressService : IAddressService
             State = dto.State,
             Country = dto.Country,
             PostalCode = dto.PostalCode,
-            UserId = userId
+            UserId = userId,
         };
         address = await _repository.AddAsync(address);
         return MapToDto(address);
@@ -77,7 +78,7 @@ public class AddressService : IAddressService
             State = address.State,
             Country = address.Country,
             PostalCode = address.PostalCode,
-            UserId = address.UserId
+            UserId = address.UserId,
         };
     }
 }

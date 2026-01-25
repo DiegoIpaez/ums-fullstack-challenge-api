@@ -7,6 +7,7 @@ namespace UmsApi.Repositories;
 public class AddressRepository : IAddressRepository
 {
     private readonly AppDbContext _context;
+
     public AddressRepository(AppDbContext context)
     {
         _context = context;
