@@ -1,4 +1,4 @@
-namespace UmsApi.DTOs;
+namespace UmsApi.DTOs.User;
 
 public class UserDto
 {
