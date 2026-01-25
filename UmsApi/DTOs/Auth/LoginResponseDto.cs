@@ -8,4 +8,3 @@ public class LoginResponseDto
     public UserDto User { get; set; } = null!;
     public DateTime ExpiresAt { get; set; }
 }
-

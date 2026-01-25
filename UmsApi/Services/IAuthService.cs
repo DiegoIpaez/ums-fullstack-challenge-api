@@ -9,4 +9,3 @@ public interface IAuthService
     Task<RegisterResponseDto> RegisterAsync(RegisterRequestDto request);
     Task LogoutAsync(long userId);
 }
-

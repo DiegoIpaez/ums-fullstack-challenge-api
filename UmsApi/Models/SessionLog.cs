@@ -7,6 +7,5 @@ public class SessionLog
     public User User { get; set; } = null!;
     public DateTime StartDate { get; set; } = DateTime.UtcNow;
     public DateTime? EndDate { get; set; }
-    public string? TokenId { get; set; } // JWT ID (opcional, para invalidación)
+    public string? TokenId { get; set; }
 }
-

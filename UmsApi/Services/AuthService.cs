@@ -5,6 +5,7 @@ using UmsApi.DTOs;
 using UmsApi.DTOs.Auth;
 using UmsApi.DTOs.User;
 using UmsApi.Models;
+using UmsApi.Models.Enums;
 using UmsApi.Repositories;
 
 namespace UmsApi.Services;
@@ -20,7 +21,8 @@ public class AuthService : IAuthService
         IUserRepository userRepository,
         AppDbContext context,
         IJwtService jwtService,
-        IConfiguration configuration)
+        IConfiguration configuration
+    )
     {
         _userRepository = userRepository;
         _context = context;
@@ -30,7 +32,8 @@ public class AuthService : IAuthService
 
     public async Task<LoginResponseDto> LoginAsync(LoginRequestDto request)
     {
-        var user = await _userRepository.Query()
+        var user = await _userRepository
+            .Query()
             .FirstOrDefaultAsync(u => u.Email == request.Email && !u.Deleted);
 
         if (user == null)
@@ -38,7 +41,6 @@ public class AuthService : IAuthService
             throw new UnauthorizedAccessException("Credenciales inválidas");
         }
 
-        // Verificar password usando BCrypt
         bool isPasswordValid = BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash);
 
         if (!isPasswordValid)
@@ -46,12 +48,7 @@ public class AuthService : IAuthService
             throw new UnauthorizedAccessException("Credenciales inválidas");
         }
 
-        // Registrar inicio de sesión
-        var sessionLog = new SessionLog
-        {
-            UserId = user.Id,
-            StartDate = DateTime.UtcNow
-        };
+        var sessionLog = new SessionLog { UserId = user.Id, StartDate = DateTime.UtcNow };
         _context.SessionLogs.Add(sessionLog);
         await _context.SaveChangesAsync();
 
@@ -70,16 +67,16 @@ public class AuthService : IAuthService
                 Email = user.Email,
                 Role = user.Role,
                 Studies = new List<StudyDto>(),
-                Addresses = new List<AddressDto>()
+                Addresses = new List<AddressDto>(),
             },
-            ExpiresAt = expiresAt
+            ExpiresAt = expiresAt,
         };
     }
 
     public async Task<RegisterResponseDto> RegisterAsync(RegisterRequestDto request)
     {
-        // Verificar si el email ya existe
-        var existingUser = await _userRepository.Query()
+        var existingUser = await _userRepository
+            .Query()
             .FirstOrDefaultAsync(u => u.Email == request.Email);
 
         if (existingUser != null)
@@ -92,8 +89,8 @@ public class AuthService : IAuthService
             Name = request.Name,
             Email = request.Email,
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
-            Role = request.Role,
-            CreatedAt = DateTime.UtcNow
+            Role = UserRole.User,
+            CreatedAt = DateTime.UtcNow,
         };
 
         user = await _userRepository.AddAsync(user);
@@ -103,14 +100,14 @@ public class AuthService : IAuthService
             Id = user.Id,
             Name = user.Name,
             Email = user.Email,
-            Role = user.Role
+            Role = user.Role,
         };
     }
 
     public async Task LogoutAsync(long userId)
     {
-        var activeSession = await _context.SessionLogs
-            .Where(s => s.UserId == userId && s.EndDate == null)
+        var activeSession = await _context
+            .SessionLogs.Where(s => s.UserId == userId && s.EndDate == null)
             .OrderByDescending(s => s.StartDate)
             .FirstOrDefaultAsync();
 
@@ -121,4 +118,3 @@ public class AuthService : IAuthService
         }
     }
 }
-
