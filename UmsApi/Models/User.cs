@@ -8,7 +8,7 @@ public class User
 
     public string Email { get; set; } = null!;
 
-    public string Password { get; set; } = null!;
+    public string PasswordHash { get; set; } = null!; // Siempre almacena el hash, nunca texto plano
 
     public string Role { get; set; } = "User";
 
@@ -18,4 +18,5 @@ public class User
 
     public ICollection<Study> Studies { get; set; } = new List<Study>();
     public ICollection<Address> Addresses { get; set; } = new List<Address>();
+    public ICollection<SessionLog> SessionLogs { get; set; } = new List<SessionLog>();
 }
