@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using UmsApi.DTOs;
+using UmsApi.DTOs.Address;
 using UmsApi.DTOs.User;
 using UmsApi.Models;
 using UmsApi.Repositories;

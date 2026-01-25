@@ -1,8 +1,7 @@
-namespace UmsApi.DTOs;
+namespace UmsApi.DTOs.Address;
 
-public class AddressDto
+public class AddressUpdateDto
 {
-    public long Id { get; set; }
     public string Street { get; set; } = null!;
     public string City { get; set; } = null!;
     public string State { get; set; } = null!;
