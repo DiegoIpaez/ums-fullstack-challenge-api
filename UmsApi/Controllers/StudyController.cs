@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using UmsApi.DTOs;
 using UmsApi.DTOs.Study;
 using UmsApi.Services;
 
@@ -16,9 +17,14 @@ public class StudiesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<StudyResponseDto>>> GetAll()
+    public async Task<ActionResult<PaginatedResponseDto<StudyResponseDto>>> GetAll(
+        [FromQuery] int page = 1,
+        [FromQuery] int limit = 10,
+        [FromQuery] bool showAll = false,
+        [FromQuery] string? search = null
+    )
     {
-        var studies = await _service.GetAllAsync();
+        var studies = await _service.GetAllAsync(page, limit, showAll, search);
         return Ok(studies);
     }
 

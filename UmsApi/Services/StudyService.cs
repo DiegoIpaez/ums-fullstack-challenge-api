@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using UmsApi.DTOs;
 using UmsApi.DTOs.Study;
 using UmsApi.Models;
 using UmsApi.Repositories;
@@ -13,10 +15,30 @@ public class StudyService : IStudyService
         _repository = repository;
     }
 
-    public async Task<List<StudyResponseDto>> GetAllAsync()
+    public async Task<PaginatedResponseDto<StudyResponseDto>> GetAllAsync(
+        int page = 1,
+        int limit = 10,
+        bool showAll = false,
+        string? search = null
+    )
     {
-        var studies = await _repository.GetAllAsync();
-        return studies
+        var query = _repository.Query();
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            query = query.Where(study =>
+                study.Title.Contains(search) || study.Institution.Contains(search)
+            );
+        }
+
+        var totalItems = await query.CountAsync();
+
+        if (!showAll)
+        {
+            query = query.Skip((page - 1) * limit).Take(limit);
+        }
+
+        var items = await query
             .Select(study => new StudyResponseDto
             {
                 Id = study.Id,
@@ -26,7 +48,15 @@ public class StudyService : IStudyService
                 EndDate = study.EndDate,
                 UserId = study.UserId,
             })
-            .ToList();
+            .ToListAsync();
+
+        return new PaginatedResponseDto<StudyResponseDto>
+        {
+            Items = items,
+            Page = showAll ? 1 : page,
+            PageSize = showAll ? totalItems : limit,
+            TotalItems = totalItems,
+        };
     }
 
     public async Task<StudyResponseDto?> GetByIdAsync(long id)

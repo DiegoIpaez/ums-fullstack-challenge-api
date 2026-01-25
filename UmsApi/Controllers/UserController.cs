@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using UmsApi.DTOs;
 using UmsApi.DTOs.User;
 using UmsApi.Services;
 
@@ -16,9 +17,14 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<UserDto>>> GetAll()
+    public async Task<ActionResult<PaginatedResponseDto<UserDto>>> GetAll(
+        [FromQuery] int page = 1,
+        [FromQuery] int limit = 10,
+        [FromQuery] bool showAll = false,
+        [FromQuery] string? search = null
+    )
     {
-        var users = await _userService.GetAllAsync();
+        var users = await _userService.GetAllAsync(page, limit, showAll, search);
         return Ok(users);
     }
 

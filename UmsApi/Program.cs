@@ -10,6 +10,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IStudyService, StudyService>();
 builder.Services.AddScoped<IStudyRepository, StudyRepository>();
 

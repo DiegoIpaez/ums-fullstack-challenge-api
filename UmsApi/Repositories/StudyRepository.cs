@@ -13,6 +13,8 @@ public class StudyRepository : IStudyRepository
         _context = context;
     }
 
+    public IQueryable<Study> Query() => _context.Studies;
+
     public async Task<List<Study>> GetAllAsync() => await _context.Studies.ToListAsync();
 
     public async Task<Study?> GetByIdAsync(long id) => await _context.Studies.FindAsync(id);
