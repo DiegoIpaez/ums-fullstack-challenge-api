@@ -2,6 +2,7 @@ using BCrypt.Net;
 using Microsoft.EntityFrameworkCore;
 using UmsApi.Data;
 using UmsApi.DTOs;
+using UmsApi.DTOs.Address;
 using UmsApi.DTOs.Auth;
 using UmsApi.DTOs.User;
 using UmsApi.Models;

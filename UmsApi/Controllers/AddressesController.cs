@@ -8,7 +8,7 @@ namespace UmsApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
+[Authorize(Policy = "UserOrAdmin")]
 public class AddressesController : ControllerBase
 {
     private readonly IAddressService _service;
