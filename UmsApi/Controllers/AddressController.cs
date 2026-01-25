@@ -9,11 +9,11 @@ namespace UmsApi.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize(Policy = "UserOrAdmin")]
-public class AddressesController : ControllerBase
+public class AddressController : ControllerBase
 {
     private readonly IAddressService _service;
 
-    public AddressesController(IAddressService service)
+    public AddressController(IAddressService service)
     {
         _service = service;
     }
