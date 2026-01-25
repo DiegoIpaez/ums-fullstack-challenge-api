@@ -13,7 +13,7 @@ public class AddressRepository : IAddressRepository
         _context = context;
     }
 
-    public IQueryable<Address> Query() => _context.Addresses.AsQueryable();
+    public IQueryable<Address> Query() => _context.Addresses;
 
     public async Task<List<Address>> GetAllAsync() => await _context.Addresses.ToListAsync();
 

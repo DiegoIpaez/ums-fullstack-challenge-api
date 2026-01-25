@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using UmsApi.DTOs;
 using UmsApi.DTOs.Address;
 using UmsApi.Models;
 using UmsApi.Repositories;
@@ -14,10 +15,42 @@ public class AddressService : IAddressService
         _repository = repository;
     }
 
-    public async Task<List<AddressDto>> GetAllAsync()
+    public async Task<PaginatedResponseDto<AddressDto>> GetAllAsync(
+        int page = 1,
+        int limit = 10,
+        bool showAll = false,
+        string? search = null
+    )
     {
-        var addresses = await _repository.GetAllAsync();
-        return addresses.Select(MapToDto).ToList();
+        var query = _repository.Query();
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var term = search.ToLower();
+            query = query.Where(address =>
+                address.Street.ToLower().Contains(term)
+                || address.City.ToLower().Contains(term)
+                || address.State.ToLower().Contains(term)
+                || address.Country.ToLower().Contains(term)
+            );
+        }
+
+        var totalItems = await query.CountAsync();
+
+        if (!showAll)
+        {
+            query = query.Skip((page - 1) * limit).Take(limit);
+        }
+
+        var items = await query.ToListAsync();
+
+        return new PaginatedResponseDto<AddressDto>
+        {
+            Items = items.Select(MapToDto).ToList(),
+            Page = page,
+            PageSize = limit,
+            TotalItems = totalItems,
+        };
     }
 
     public async Task<AddressDto?> GetByIdAsync(long id)
