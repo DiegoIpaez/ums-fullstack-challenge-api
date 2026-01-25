@@ -36,30 +36,27 @@ public class AuthService : IAuthService
             .Query()
             .FirstOrDefaultAsync(u => u.Email == request.Email && !u.Deleted);
 
-        if (user == null)
-        {
+        if (user is null)
             throw new UnauthorizedAccessException("Credenciales inválidas");
-        }
 
-        bool isPasswordValid = BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash);
-
-        if (!isPasswordValid)
-        {
+        if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
             throw new UnauthorizedAccessException("Credenciales inválidas");
-        }
 
         var sessionLog = new SessionLog { UserId = user.Id, StartDate = DateTime.UtcNow };
+
         _context.SessionLogs.Add(sessionLog);
         await _context.SaveChangesAsync();
 
         var token = _jwtService.GenerateToken(user);
-        var expiresAt = DateTime.UtcNow.AddHours(
-            int.Parse(_configuration["JWT:TokenExpiryTimeInHour"] ?? "1")
-        );
+
+        int expiryHours = int.TryParse(_configuration["JWT:TokenExpiryTimeInHour"], out var hours)
+            ? hours
+            : 1;
 
         return new LoginResponseDto
         {
             Token = token,
+            ExpiresAt = DateTime.UtcNow.AddHours(expiryHours),
             User = new UserDto
             {
                 Id = user.Id,
@@ -69,20 +66,15 @@ public class AuthService : IAuthService
                 Studies = new List<StudyDto>(),
                 Addresses = new List<AddressDto>(),
             },
-            ExpiresAt = expiresAt,
         };
     }
 
     public async Task<RegisterResponseDto> RegisterAsync(RegisterRequestDto request)
     {
-        var existingUser = await _userRepository
-            .Query()
-            .FirstOrDefaultAsync(u => u.Email == request.Email);
+        var existingUser = await _userRepository.Query().AnyAsync(u => u.Email == request.Email);
 
-        if (existingUser != null)
-        {
+        if (existingUser)
             throw new InvalidOperationException("El email ya está registrado");
-        }
 
         var user = new User
         {
@@ -111,10 +103,10 @@ public class AuthService : IAuthService
             .OrderByDescending(s => s.StartDate)
             .FirstOrDefaultAsync();
 
-        if (activeSession != null)
-        {
-            activeSession.EndDate = DateTime.UtcNow;
-            await _context.SaveChangesAsync();
-        }
+        if (activeSession is null)
+            return;
+
+        activeSession.EndDate = DateTime.UtcNow;
+        await _context.SaveChangesAsync();
     }
 }

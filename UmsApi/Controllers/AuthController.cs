@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UmsApi.DTOs.Auth;
@@ -11,10 +12,27 @@ namespace UmsApi.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
+    private static readonly Regex EmailRegex = new(
+        @"^[^@\s]+@[^@\s]+\.[^@\s]+$",
+        RegexOptions.Compiled
+    );
 
     public AuthController(IAuthService authService)
     {
         _authService = authService;
+    }
+
+    private static string NormalizeAndValidateEmail(string email)
+    {
+        if (string.IsNullOrWhiteSpace(email))
+            throw new BadHttpRequestException("El email es obligatorio");
+
+        var normalizedEmail = email.Trim().ToLowerInvariant();
+
+        if (!EmailRegex.IsMatch(normalizedEmail))
+            throw new BadHttpRequestException("El email no tiene un formato válido");
+
+        return normalizedEmail;
     }
 
     [HttpPost("login")]
@@ -22,6 +40,7 @@ public class AuthController : ControllerBase
     {
         try
         {
+            request.Email = NormalizeAndValidateEmail(request.Email);
             var response = await _authService.LoginAsync(request);
             return Ok(response);
         }
@@ -36,6 +55,7 @@ public class AuthController : ControllerBase
     {
         try
         {
+            request.Email = NormalizeAndValidateEmail(request.Email);
             var response = await _authService.RegisterAsync(request);
             return CreatedAtAction(nameof(Register), response);
         }
