@@ -74,9 +74,6 @@ namespace UmsApi.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("TokenId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<long>("UserId")
                         .HasColumnType("bigint");
 

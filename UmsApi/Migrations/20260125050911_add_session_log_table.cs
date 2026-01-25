@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace UmsApi.Migrations
 {
     /// <inheritdoc />
-    public partial class rename_password_column_in_users_table : Migration
+    public partial class add_session_log_table : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -14,20 +14,25 @@ namespace UmsApi.Migrations
             migrationBuilder.RenameColumn(
                 name: "Password",
                 table: "Users",
-                newName: "PasswordHash"
-            );
+                newName: "PasswordHash");
+
+            migrationBuilder.AlterColumn<int>(
+                name: "Role",
+                table: "Users",
+                type: "int",
+                nullable: false,
+                oldClrType: typeof(string),
+                oldType: "nvarchar(max)");
 
             migrationBuilder.CreateTable(
                 name: "SessionLogs",
                 columns: table => new
                 {
-                    Id = table
-                        .Column<long>(type: "bigint", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<long>(type: "bigint", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    TokenId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -37,28 +42,33 @@ namespace UmsApi.Migrations
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade
-                    );
-                }
-            );
+                        onDelete: ReferentialAction.Cascade);
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_SessionLogs_UserId",
                 table: "SessionLogs",
-                column: "UserId"
-            );
+                column: "UserId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(name: "SessionLogs");
+            migrationBuilder.DropTable(
+                name: "SessionLogs");
 
             migrationBuilder.RenameColumn(
                 name: "PasswordHash",
                 table: "Users",
-                newName: "Password"
-            );
+                newName: "Password");
+
+            migrationBuilder.AlterColumn<string>(
+                name: "Role",
+                table: "Users",
+                type: "nvarchar(max)",
+                nullable: false,
+                oldClrType: typeof(int),
+                oldType: "int");
         }
     }
 }

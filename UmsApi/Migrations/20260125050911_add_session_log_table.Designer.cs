@@ -12,8 +12,8 @@ using UmsApi.Data;
 namespace UmsApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260125033448_data_type_role_is_changed")]
-    partial class data_type_role_is_changed
+    [Migration("20260125050911_add_session_log_table")]
+    partial class add_session_log_table
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -76,9 +76,6 @@ namespace UmsApi.Migrations
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("TokenId")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("UserId")
                         .HasColumnType("bigint");
