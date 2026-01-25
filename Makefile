@@ -30,6 +30,9 @@ run:
 watch:
 	ASPNETCORE_ENVIRONMENT=$(ENV) dotnet watch run --project $(PROJECT_PATH)
 
+format:
+    dotnet csharpier format .
+
 migrate:
 	@if [ -z "$(name)" ]; then \
 		echo "❌ Falta el nombre de la migración"; \
