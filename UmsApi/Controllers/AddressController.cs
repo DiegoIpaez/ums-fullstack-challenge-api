@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using UmsApi.DTOs;
 using UmsApi.DTOs.Address;
 using UmsApi.Extensions;
 using UmsApi.Services;
@@ -19,9 +20,14 @@ public class AddressController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<AddressDto>>> GetAll()
+    public async Task<ActionResult<PaginatedResponseDto<AddressDto>>> GetAll(
+        [FromQuery] int page = 1,
+        [FromQuery] int limit = 10,
+        [FromQuery] bool showAll = false,
+        [FromQuery] string? search = null
+    )
     {
-        var addresses = await _service.GetAllAsync();
+        var addresses = await _service.GetAllAsync(page, limit, showAll, search);
         return Ok(addresses);
     }
 
