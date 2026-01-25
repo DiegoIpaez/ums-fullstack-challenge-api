@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using UmsApi.DTOs;
+using UmsApi.DTOs.User;
 using UmsApi.Services;
 
 namespace UmsApi.Controllers;
@@ -34,7 +34,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPatch("{id:long}")]
-    public async Task<IActionResult> Update(long id, UpdateUserRequest request)
+    public async Task<IActionResult> Update(long id, UserUpdateDto request)
     {
         var updated = await _userService.UpdateAsync(id, request);
 

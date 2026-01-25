@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using UmsApi.Data;
 using UmsApi.DTOs;
+using UmsApi.DTOs.User;
 using UmsApi.Models;
 
 namespace UmsApi.Services;
@@ -27,7 +28,7 @@ public class UserService : IUserService
             .FirstOrDefaultAsync();
     }
 
-    public async Task<bool> UpdateAsync(long id, UpdateUserRequest request)
+    public async Task<bool> UpdateAsync(long id, UserUpdateDto request)
     {
         var user = await _context.Users.FirstOrDefaultAsync(user => user.Id == id && !user.Deleted);
 
