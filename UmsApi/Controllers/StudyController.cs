@@ -5,8 +5,11 @@ using UmsApi.Services;
 
 namespace UmsApi.Controllers;
 
+using Microsoft.AspNetCore.Authorization;
+
 [ApiController]
 [Route("api/[controller]")]
+[Authorize(Policy = "UserOrAdmin")]
 public class StudiesController : ControllerBase
 {
     private readonly IStudyService _service;

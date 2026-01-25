@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UmsApi.DTOs;
 using UmsApi.DTOs.User;
@@ -17,6 +18,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Policy = "AdminOnly")]
     public async Task<ActionResult<PaginatedResponseDto<UserDto>>> GetAll(
         [FromQuery] int page = 1,
         [FromQuery] int limit = 10,
@@ -29,6 +31,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("{id:long}")]
+    [Authorize(Policy = "UserOrAdmin")]
     public async Task<ActionResult<UserDto>> GetById(long id)
     {
         var user = await _userService.GetByIdAsync(id);
@@ -40,6 +43,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPatch("{id:long}")]
+    [Authorize(Policy = "UserOrAdmin")]
     public async Task<IActionResult> Update(long id, UserUpdateDto request)
     {
         var updated = await _userService.UpdateAsync(id, request);
@@ -51,6 +55,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpDelete("{id:long}")]
+    [Authorize(Policy = "UserOrAdmin")]
     public async Task<IActionResult> Delete(long id)
     {
         var deleted = await _userService.DeleteAsync(id);

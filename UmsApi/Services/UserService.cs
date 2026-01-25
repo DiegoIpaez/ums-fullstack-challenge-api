@@ -26,11 +26,7 @@ public class UserService : IUserService
 
         if (!string.IsNullOrWhiteSpace(search))
         {
-            query = query.Where(user =>
-                user.Name.Contains(search)
-                || user.Email.Contains(search)
-                || user.Role.Contains(search)
-            );
+            query = query.Where(user => user.Name.Contains(search) || user.Email.Contains(search));
         }
 
         var totalItems = await query.CountAsync();

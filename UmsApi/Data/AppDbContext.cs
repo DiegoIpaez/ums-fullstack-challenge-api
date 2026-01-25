@@ -11,6 +11,7 @@ public class AppDbContext : DbContext
     public DbSet<User> Users => Set<User>();
     public DbSet<Study> Studies => Set<Study>();
     public DbSet<Address> Addresses => Set<Address>();
+    public DbSet<SessionLog> SessionLogs => Set<SessionLog>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
