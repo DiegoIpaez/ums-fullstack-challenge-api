@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using UmsApi.Data;
 using UmsApi.Extensions;
+using UmsApi.Models.Enums;
 using UmsApi.Repositories;
 using UmsApi.Services;
 
@@ -14,7 +15,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "UMS API", Version = "v1" });
-
     c.AddSecurityDefinition(
         "Bearer",
         new OpenApiSecurityScheme
@@ -23,8 +23,9 @@ builder.Services.AddSwaggerGen(c =>
                 "JWT Authorization header usando el esquema Bearer. Ejemplo: \"Authorization: Bearer {token}\"",
             Name = "Authorization",
             In = ParameterLocation.Header,
-            Type = SecuritySchemeType.ApiKey,
-            Scheme = "Bearer",
+            Type = SecuritySchemeType.Http,
+            Scheme = "bearer",
+            BearerFormat = "JWT",
         }
     );
 
@@ -74,8 +75,12 @@ builder
 
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
-    options.AddPolicy("UserOrAdmin", policy => policy.RequireRole("User", "Admin"));
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole(UserRole.Admin.ToString()));
+    options.AddPolicy("UserOnly", policy => policy.RequireRole(UserRole.User.ToString()));
+    options.AddPolicy(
+        "UserOrAdmin",
+        policy => policy.RequireRole(UserRole.User.ToString(), UserRole.Admin.ToString())
+    );
 });
 
 builder.Services.AddScoped<IUserService, UserService>();
