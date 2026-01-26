@@ -35,12 +35,6 @@ public class AuthController : ControllerBase
         return normalizedEmail;
     }
 
-    [HttpGet("debug-claims")]
-    public IActionResult DebugClaims()
-    {
-        return Ok(User.Claims.Select(c => new { c.Type, c.Value }));
-    }
-
     [HttpPost("login")]
     public async Task<ActionResult<LoginResponseDto>> Login(LoginRequestDto request)
     {

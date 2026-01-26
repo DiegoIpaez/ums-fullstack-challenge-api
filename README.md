@@ -6,7 +6,7 @@ API RESTful para gestión de usuarios, direcciones y estudios, con autenticació
 
 1. **Clonar el repositorio:**
    ```bash
-   git clone <repo-url>
+   git clone https://github.com/DiegoIpaez/ums-fullstack-challenge-api
    cd ums-fullstack-challenge-api
    ```
 2. **Configurar la base de datos:**
@@ -23,7 +23,7 @@ API RESTful para gestión de usuarios, direcciones y estudios, con autenticació
    ```
 
 5. **Swagger UI:**
-   - Accede a la documentación interactiva en: `https://localhost:5001/swagger`
+   - Accede a la documentación interactiva en: `https://localhost:5098/swagger/index.html`
 
 ## 🔑 Autenticación
 
@@ -34,21 +34,28 @@ API RESTful para gestión de usuarios, direcciones y estudios, con autenticació
 
 ### Auth
 - `POST /api/Auth/login` — Login
+- `POST /api/Auth/logout` — Logout
 - `POST /api/Auth/register` — Registro
 
 ### Users
 - `GET /api/Users` — Listado paginado (admin)
 - `GET /api/Users/{id}` — Detalle
+- `PATCH /api/Users/{id}` — Actualizar
+- `DELETE /api/Users/{id}` — Eliminar
 
 ### Address
 - `GET /api/Address` — Listado paginado
+- `GET /api/Address/{id}` — Detalle
 - `POST /api/Address` — Crear
 - `PUT /api/Address/{id}` — Actualizar
 - `DELETE /api/Address/{id}` — Eliminar
 
 ### Studies
 - `GET /api/Studies` — Listado paginado
+- `GET /api/Studies/{id}` — Detalle
 - `POST /api/Studies` — Crear
+- `PUT /api/Studies/{id}` — Actualizar
+- `DELETE /api/Studies/{id}` — Eliminar
 
 ## ⚙️ Configuración
 
@@ -65,7 +72,7 @@ API RESTful para gestión de usuarios, direcciones y estudios, con autenticació
 ## 🧩 Stack
 - .NET 8
 - Entity Framework Core
-- SQL Server (puedes cambiar la cadena de conexión)
+- SQL Server
 - JWT Auth
 - Swagger/OpenAPI
 
